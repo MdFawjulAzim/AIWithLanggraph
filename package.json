@@ -1,0 +1,17 @@
+{
+  "name": "aiproject",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Model.js",
+  "dependencies": {
+    "dotenv": "^17.3.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs"
+}
