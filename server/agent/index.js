@@ -1,7 +1,8 @@
 // server/agent/index.js
 import express from "express";
 import cors from "cors";
-import { agent } from "./GeminiAgent.js"; // ✅ use relative path + extension
+import { agent } from "./OpenAiAgent.js";
+// import { agent } from "./GeminiAgent.js";
 
 const app = express();
 const port = 3001;
@@ -14,18 +15,19 @@ app.get("/", (req, res) => {
 });
 
 app.post("/generate", async (req, res) => {
+  const { prompt, thread_id } = req.body;
   try {
     const result = await agent.invoke(
       {
         messages: [
           {
             role: "user",
-            content: "What's the weather in Tokyo?",
+            content: prompt,
           },
         ],
       },
       {
-        configurable: { thread_id: 42 },
+        configurable: { thread_id: thread_id },
       },
     );
 
