@@ -1,6 +1,22 @@
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 
-import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
+const weatherTool = tool(
+  async ({ query }) => {
+    console.log("query", query);
+
+    // TODO: Implement the weather tool by fetching an API
+
+    return "The weather in Tokyo is sunny.";
+  },
+  {
+    name: "weather",
+    description: "Get the weather in a given location",
+    schema: z.object({
+      query: z.string().describe("The query to use in search"),
+    }),
+  },
+);
 
 const model = new ChatGoogleGenerativeAI({
   model: "gemini-2.5-flash",
@@ -10,11 +26,28 @@ const model = new ChatGoogleGenerativeAI({
 
 const agent = createReactAgent({
   llm: model,
-  tools: [],
+  tools: [weatherTool],
 });
 
 const result = await agent.invoke({
-  messages: [{ role: "user", content: "Hello, How can you help me today?" }],
+  messages: [
+    {
+      role: "user",
+      content: "What's the weather in Tokyo?",
+    },
+  ],
 });
 
+const followup = await agent.invoke({
+  messages: [
+    {
+      role: "user",
+      content: "What city is that for?",
+    },
+  ],
+});
+
+// console.log(result);
+
 console.log(result.messages.at(-1)?.content);
+console.log("followup:", followup.messages.at(-1)?.content);
