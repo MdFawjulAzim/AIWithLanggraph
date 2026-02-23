@@ -29,8 +29,41 @@ const model = new ChatGoogleGenerativeAI({
 
 const checkpointSaver = new MemorySaver();
 
-export const agent = createReactAgent({
+const agent = createReactAgent({
   llm: model,
   tools: [weatherTool],
   checkpointSaver,
 });
+
+const result = await agent.invoke(
+  {
+    messages: [
+      {
+        role: "user",
+        content: "What's the weather in Tokyo?",
+      },
+    ],
+  },
+  {
+    configurable: { thread_id: 42 },
+  },
+);
+
+const followup = await agent.invoke(
+  {
+    messages: [
+      {
+        role: "user",
+        content: "What city is that for?",
+      },
+    ],
+  },
+  {
+    configurable: { thread_id: 42 },
+  },
+);
+
+// console.log(result);
+
+console.log(result.messages.at(-1)?.content);
+console.log("followup:", followup.messages.at(-1)?.content);
