@@ -1,5 +1,7 @@
+import { tool } from "@langchain/core/tools";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
+import z from "zod";
 
 const weatherTool = tool(
   async ({ query }) => {
