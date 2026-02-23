@@ -1,7 +1,8 @@
 // server/agent/index.js
 import express from "express";
 import cors from "cors";
-import { agent } from "./OpenAiAgent.js";
+import { agent } from "./agent.js";
+// import { agent } from "../../OpenAiAgent.js";
 // import { agent } from "./GeminiAgent.js";
 
 const app = express();

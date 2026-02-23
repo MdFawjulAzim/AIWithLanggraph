@@ -1,8 +1,5 @@
-import { tool } from "@langchain/core/tools";
-import { MemorySaver } from "@langchain/langgraph";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
-import { ChatOpenAI } from "@langchain/openai";
-import z from "zod";
+import { ChatAnthropic } from "@langchain/anthropic";
 
 const weatherTool = tool(
   async ({ query }) => {
@@ -20,15 +17,25 @@ const weatherTool = tool(
     }),
   },
 );
-const model = new ChatOpenAI({
-  modelName: "gpt-4o-mini",
-  temperature: 0,
+
+const model = new ChatAnthropic({
+  model: "claude-3-5-sonar-latest",
 });
 
-const checkpointSaver = new MemorySaver();
-
-export const agent = createReactAgent({
+const agent = createReactAgent({
   llm: model,
   tools: [weatherTool],
-  checkpointSaver,
 });
+
+const result = await agent.invoke({
+  messages: [
+    {
+      role: "user",
+      content: "What's the weather in Tokyo?",
+    },
+  ],
+});
+
+// console.log(result);
+
+console.log(result.messages.at(-1)?.content);
