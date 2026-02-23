@@ -2,6 +2,7 @@ import { tool } from "@langchain/core/tools";
 import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 import { createReactAgent } from "@langchain/langgraph/prebuilt";
 import z from "zod";
+import { MemorySaver } from "@langchain/langgraph";
 
 const weatherTool = tool(
   async ({ query }) => {
@@ -22,32 +23,45 @@ const weatherTool = tool(
 
 const model = new ChatGoogleGenerativeAI({
   model: "gemini-2.5-flash",
-  temperature: 0,
+  // temperature: 0,
   apiKey: process.env.GEMINI_API_KEY,
 });
+
+const checkpointSaver = new MemorySaver();
 
 const agent = createReactAgent({
   llm: model,
   tools: [weatherTool],
+  checkpointSaver,
 });
 
-const result = await agent.invoke({
-  messages: [
-    {
-      role: "user",
-      content: "What's the weather in Tokyo?",
-    },
-  ],
-});
+const result = await agent.invoke(
+  {
+    messages: [
+      {
+        role: "user",
+        content: "What's the weather in Tokyo?",
+      },
+    ],
+  },
+  {
+    configurable: { thread_id: 42 },
+  },
+);
 
-const followup = await agent.invoke({
-  messages: [
-    {
-      role: "user",
-      content: "What city is that for?",
-    },
-  ],
-});
+const followup = await agent.invoke(
+  {
+    messages: [
+      {
+        role: "user",
+        content: "What city is that for?",
+      },
+    ],
+  },
+  {
+    configurable: { thread_id: 42 },
+  },
+);
 
 // console.log(result);
 

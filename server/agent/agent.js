@@ -36,16 +36,6 @@ const result = await agent.invoke({
   ],
 });
 
-const followup = await agent.invoke({
-  messages: [
-    {
-      role: "user",
-      content: "What city is that for?",
-    },
-  ],
-});
-
 // console.log(result);
 
 console.log(result.messages.at(-1)?.content);
-console.log("followup:", followup.messages.at(-1)?.content);
