@@ -23,13 +23,16 @@ const weatherTool = tool(
 
 const jsExecutor = tool(
   async ({ code }) => {
-    const response = await fetch(`${process.env.EXECUTOR_PORT}` || "", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${process.env.EXECUTOR_PORT || "http://localhost:3000"}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ code }),
       },
-      body: JSON.stringify({ code }),
-    });
+    );
     return await response.json();
   },
   {
